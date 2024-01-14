@@ -1,0 +1,38 @@
+version: "3.17"
+services:
+  nginx:
+    build:
+      context: docker/nginx
+    restart: always
+    depends_on:
+      - php
+    volumes:
+      - ./:/var/www
+    ports:
+      - "80:80"
+      - "443:443"
+  php:
+    build:
+      context: docker/php
+    restart: always
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/var/www
+    container_name: symfony
+  mysql:
+    build:
+      context: docker/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: toDoDatabase
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_USER: toDoUser
+      MYSQL_PASSWORD: toDoUser
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+volumes:
+  mysql_data:
