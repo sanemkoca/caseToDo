@@ -1,20 +1,65 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}CaseTodo{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="max-w-7xl mx-auto py-4">
+        <div class="flex items-center justify-between">
+            <h1>Choose a Strategy</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+            <form action="{{ path('app_default') }}" method="post">
+                <label for="strategy">Select Strategy:</label>
+                <select id="strategy" name="strategy">
+                    <option value="StrategySameLevel">Same Level Strategy</option>
+                    <option value="StrategyOverTime">Over Time</option>
+                </select>
+                <button type="submit">Apply Strategy</button>
+            </form>
+        </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/sanemkoca/Desktop/Sanem/Case/caseToDo/src/Controller/DefaultController.php'|file_link(0) }}">src/Controller/DefaultController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/sanemkoca/Desktop/Sanem/Case/caseToDo/templates/default/index.html.twig'|file_link(0) }}">templates/default/index.html.twig</a></code></li>
-    </ul>
-</div>
+        {% for plan in plans %}
+            <div class="bg-white rounded p-2 shadow my-4">
+                <div style="display: flex; align-items: center; justify-content: center; height: 64px; background: #b9b9b9; margin-top: 20px">
+                    <span class="text-xl"> {{ plan.developer.developer }} - Level: {{ plan.developer.level }}</span>
+                </div>
+                <div class="grid grid-cols-4 gap-4"
+                     style="display: flex; flex-direction: row !important; justify-content: space-between;">
+                    {% for weekNumber, tasks in plan.weeks %}
+                        <div class="p-2 {{ loop.index % 5 == 0 or loop.index == 1 ? 'border-0' : 'border-l' }}"
+                             style="width: 25%; margin-top: 20px">
+                            {% if tasks is defined %}
+                                <div class="flex items-center justify-between border-b px-2" style="height: 25px">
+                                    <b class="text-lg">{{ weekNumber }}. Week</b>
+                                </div>
+                                <div class="px-4">
+                                    {% for task in tasks %}
+                                        <div class="border-b py-2"
+                                             style="border: 1px solid gray;margin: 10px 20px 10px 0;padding: 9px 10px;">
+                                            <div class="block"
+                                                 style="background-color: #b9b9b9; padding: 10px">
+                                                {{ task.title }}
+                                            </div>
+                                            <hr>
+                                            <div class="flex items-center justify-between">
+                                                <small class="font-regular">Duration:</small>
+                                                <small class="font-regular">
+                                                    {{ task.duration }} hrs
+                                                </small>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <small class="font-regular">Difficulty:</small>
+                                                <small class="font-regular">
+                                                    {{ task.difficulty }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
